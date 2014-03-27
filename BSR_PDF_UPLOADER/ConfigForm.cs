@@ -37,6 +37,7 @@ namespace BSR_PDF_UPLOADER
 
             TBLOGFOLDER.Text = Properties.Settings.Default.log_folder;
 
+            CBREPLACEHASH.Checked = Properties.Settings.Default.replace_hash;
             CBUSECUSTOMREGEX.Checked = Properties.Settings.Default.use_custom_detector;
             TBCUSTOMREG.Text = Properties.Settings.Default.custom_detector;
             TBREPLACEREG.Text = Properties.Settings.Default.custom_replace;
@@ -90,6 +91,7 @@ namespace BSR_PDF_UPLOADER
             }
 
             Properties.Settings.Default.replace_mode = RBREPLACEDOCS.Checked;
+            Properties.Settings.Default.replace_hash = CBREPLACEHASH.Checked;
             Properties.Settings.Default.use_custom_detector = CBUSECUSTOMREGEX.Checked;
             Properties.Settings.Default.custom_detector = TBCUSTOMREG.Text;
             Properties.Settings.Default.custom_replace = TBREPLACEREG.Text;

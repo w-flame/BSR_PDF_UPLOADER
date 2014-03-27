@@ -20,16 +20,19 @@
       <Value Profile="(Default)">BSR</Value>
     </Setting>
     <Setting Name="custom_detector" Type="System.String" Scope="User" Roaming="false">
-      <Value Profile="(Default)">^(\d+[а-яА-Я]{0,2})-(\d+)-(\d+)(.*)</Value>
+      <Value Profile="(Default)">^(\d+)([а-яА-Я]{0,2}|/\d+)-(\d+)(-|/)(\d+)(.*)</Value>
     </Setting>
     <Setting Name="custom_replace" Type="System.String" Scope="User" Roaming="false">
-      <Value Profile="(Default)">$1-$2/$3%</Value>
+      <Value Profile="(Default)">$1$2-$3/$5%</Value>
     </Setting>
     <Setting Name="first_launch" Type="System.Boolean" Scope="User" Roaming="false">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="log_folder" Type="System.String" Scope="User" Roaming="false">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="replace_hash" Type="System.Boolean" Scope="User" Roaming="false">
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="replace_mode" Type="System.Boolean" Scope="User" Roaming="false">
       <Value Profile="(Default)">False</Value>

@@ -129,7 +129,7 @@ namespace BSR_PDF_UPLOADER
             }
         }
 
-        public static void UploadPDF(string[] pdf_paths, string bsr_base, string bsr_user, string bsr_pass, AfterUploadAction after_upload, string copy_path, bool use_log, string log_path, bool replace_mode, string regex, string replace_regex)
+        public static void UploadPDF(string[] pdf_paths, string bsr_base, string bsr_user, string bsr_pass, AfterUploadAction after_upload, string copy_path, bool use_log, string log_path, bool replace_mode, string regex, string replace_regex, bool replace_hash)
         {
            
 				using (OracleConnection connection = new OracleConnection())
@@ -148,7 +148,12 @@ namespace BSR_PDF_UPLOADER
 		                	cmd.Connection = connection;
 		                	cmd.CommandText = "SELECT ID_DOCUM, NUMDOCUM FROM BSR.BSRP WHERE NUMDOCUM LIKE :numdoc";
 
+		                	
+		                	if (replace_hash) {
+		                		case_number = case_number.Replace('#','/');
+		                	}
                             case_number = Regex.Replace(case_number, regex, replace_regex);
+                            
 	
 	                        OracleParameter op = new OracleParameter()
 	                        {

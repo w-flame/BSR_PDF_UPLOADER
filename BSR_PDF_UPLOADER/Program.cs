@@ -74,8 +74,8 @@ namespace BSR_PDF_UPLOADER
 
                     try
                     {
-                        string regex = "^(\\d+[а-яА-Я]{0,2})-(\\d+)-(\\d+)";
-                        string replace_regex = "$1-$2/$3%";
+                        string regex = "^(\\d+)([а-яА-Я]{0,2}|/\\d+)-(\\d+)(-|/)(\\d+)(.*)";
+                        string replace_regex = "$1$2-$3/$5%";
                         if (Properties.Settings.Default.use_custom_detector)
                         {
                             regex = Properties.Settings.Default.custom_detector;
@@ -86,7 +86,7 @@ namespace BSR_PDF_UPLOADER
                         Brain.UploadPDF(files, Properties.Settings.Default.bsr_base, Properties.Settings.Default.bsr_user,
                         SecurityFunctions.ToInsecureString(SecurityFunctions.DecryptString(Properties.Settings.Default.bsr_pass)),
                         ua, Properties.Settings.Default.after_action_folder, Properties.Settings.Default.use_log, Properties.Settings.Default.log_folder,
-                        Properties.Settings.Default.replace_mode,regex,replace_regex);
+                        Properties.Settings.Default.replace_mode,regex,replace_regex,Properties.Settings.Default.replace_hash);
                     }
                     catch (Exception ex)
                     {

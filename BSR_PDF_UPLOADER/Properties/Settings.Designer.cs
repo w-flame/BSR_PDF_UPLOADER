@@ -85,7 +85,7 @@ namespace BSR_PDF_UPLOADER.Properties {
 		
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("^(\\d+[а-яА-Я]{0,2})-(\\d+)-(\\d+)(.*)")]
+		[global::System.Configuration.DefaultSettingValueAttribute("^(\\d+)([а-яА-Я]{0,2}|/\\d+)-(\\d+)(-|/)(\\d+)(.*)")]
 		public string custom_detector {
 			get {
 				return ((string)(this["custom_detector"]));
@@ -97,7 +97,7 @@ namespace BSR_PDF_UPLOADER.Properties {
 		
 		[global::System.Configuration.UserScopedSettingAttribute()]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.Configuration.DefaultSettingValueAttribute("$1-$2/$3%")]
+		[global::System.Configuration.DefaultSettingValueAttribute("$1$2-$3/$5%")]
 		public string custom_replace {
 			get {
 				return ((string)(this["custom_replace"]));
@@ -128,6 +128,18 @@ namespace BSR_PDF_UPLOADER.Properties {
 			}
 			set {
 				this["log_folder"] = value;
+			}
+		}
+		
+		[global::System.Configuration.UserScopedSettingAttribute()]
+		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+		[global::System.Configuration.DefaultSettingValueAttribute("True")]
+		public bool replace_hash {
+			get {
+				return ((bool)(this["replace_hash"]));
+			}
+			set {
+				this["replace_hash"] = value;
 			}
 		}
 		
