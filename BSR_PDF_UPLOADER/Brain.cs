@@ -141,12 +141,13 @@ namespace BSR_PDF_UPLOADER
 	                	
 	                    string case_number = Path.GetFileNameWithoutExtension(pdf_path);
 	                    string bsr_case_number = "";
+	                    string rubricat = "";
 		                object cmd_res = null;
 		                
 	
 		                using (OracleCommand cmd = new OracleCommand()){
 		                	cmd.Connection = connection;
-		                	cmd.CommandText = "SELECT ID_DOCUM, NUMDOCUM FROM BSR.BSRP WHERE NUMDOCUM LIKE :numdoc";
+		                	cmd.CommandText = "SELECT ID_DOCUM, NUMDOCUM, RUBRIKAT FROM BSR.BSRP WHERE NUMDOCUM LIKE :numdoc";
 
 		                	
 		                	if (replace_hash) {
@@ -171,6 +172,7 @@ namespace BSR_PDF_UPLOADER
 	                        {
 	                            cmd_res = reader.GetOracleNumber(0);
 	                            bsr_case_number = reader.GetString(1);
+	                            rubricat = reader.GetString(2);
 	                        }
 	                        reader.Close();
 		                	
@@ -214,11 +216,12 @@ namespace BSR_PDF_UPLOADER
 
 
                             
-
+							OracleTransaction transaction = connection.BeginTransaction();
                             using (OracleCommand cmd = new OracleCommand())
                             {
 
                                 cmd.Connection = connection;
+                                cmd.Transaction = transaction;
 
                                 if (replace_mode && PORNUM != 1)
                                 {
@@ -275,10 +278,42 @@ namespace BSR_PDF_UPLOADER
                                     ParameterName = ":ext"
                                 };
                                 cmd.Parameters.Add(op_ext);
-
+                                
+                                
+                               
+                                System.Data.OracleClient.OracleCommand update_rubricat_cmd = new OracleCommand();
+                                update_rubricat_cmd.Connection = connection;
+                                update_rubricat_cmd.Transaction = transaction;
+                                update_rubricat_cmd.CommandText = "UPDATE BSR.BSRP b SET b.rubrikat = :rub WHERE b.id_docum = :id";
+                                
+                                char[] chars = rubricat.ToCharArray();
+    							chars[1] = '1';
+    							rubricat  = new string(chars);
+                                
+                                OracleParameter op_rub = new OracleParameter() {
+                                	Direction = System.Data.ParameterDirection.Input,
+                                	OracleType = OracleType.VarChar,
+                                	Value = rubricat,
+                                	ParameterName = ":rub"
+                                };
+    							update_rubricat_cmd.Parameters.Add(op_rub);
+    							
+    							OracleParameter op_id_2 = new OracleParameter()
+                                {
+                                    Direction = System.Data.ParameterDirection.Input,
+                                    OracleType = OracleType.Number,
+                                    Value = case_id,
+                                    ParameterName = ":id"
+                                };
+    							update_rubricat_cmd.Parameters.Add(op_id_2);
+                                
                                 try
                                 {
+                                	
                                     cmd.ExecuteNonQuery();
+                                    update_rubricat_cmd.ExecuteNonQuery();
+                                    transaction.Commit();
+                                    
                                     if (use_log) Logging.CSV(log_path, Path.GetFileName(pdf_path), "Загрузка документа", "Загружено", case_number, bsr_case_number, PORNUM.ToString());
 
 
@@ -325,7 +360,7 @@ namespace BSR_PDF_UPLOADER
                                 }
 
                             }
-
+                            transaction.Dispose();
                            
 	
 	                    }
