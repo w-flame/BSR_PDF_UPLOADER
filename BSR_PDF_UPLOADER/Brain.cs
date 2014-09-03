@@ -141,7 +141,7 @@ namespace BSR_PDF_UPLOADER
 	                	
 	                    string case_number = Path.GetFileNameWithoutExtension(pdf_path);
 	                    string bsr_case_number = "";
-	                    string rubricat = "";
+	                    string rubricat = "000";
 		                object cmd_res = null;
 		                
 	
@@ -172,7 +172,9 @@ namespace BSR_PDF_UPLOADER
 	                        {
 	                            cmd_res = reader.GetOracleNumber(0);
 	                            bsr_case_number = reader.GetString(1);
-	                            rubricat = reader.GetString(2);
+	                            if (!reader.IsDBNull(2)) {
+	                            	rubricat = reader.GetString(2);
+	                            }
 	                        }
 	                        reader.Close();
 		                	
@@ -285,6 +287,8 @@ namespace BSR_PDF_UPLOADER
                                 update_rubricat_cmd.Connection = connection;
                                 update_rubricat_cmd.Transaction = transaction;
                                 update_rubricat_cmd.CommandText = "UPDATE BSR.BSRP b SET b.rubrikat = :rub WHERE b.id_docum = :id";
+                                
+                                
                                 
                                 char[] chars = rubricat.ToCharArray();
     							chars[1] = '1';
