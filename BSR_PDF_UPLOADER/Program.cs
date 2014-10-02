@@ -15,9 +15,9 @@ namespace BSR_PDF_UPLOADER
         {
             if (Properties.Settings.Default.first_launch)
             {
-                //Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.first_launch = false;
-                //Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();
             }
 
 
