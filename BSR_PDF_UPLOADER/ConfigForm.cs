@@ -31,7 +31,9 @@ namespace BSR_PDF_UPLOADER
             TBMOVEFOLDER.Text = Properties.Settings.Default.after_action_folder;
 
             RBREPLACEDOCS.Checked = Properties.Settings.Default.replace_mode;
-
+			CBREMOVEEXISTING.Checked = Properties.Settings.Default.remove_existing;
+            
+            
             CBUSELOG.Checked = Properties.Settings.Default.use_log;
             CBUSELOG_CheckedChanged(null, null);
 
@@ -91,6 +93,7 @@ namespace BSR_PDF_UPLOADER
             }
 
             Properties.Settings.Default.replace_mode = RBREPLACEDOCS.Checked;
+            Properties.Settings.Default.remove_existing = CBREMOVEEXISTING.Checked;
             Properties.Settings.Default.replace_hash = CBREPLACEHASH.Checked;
             Properties.Settings.Default.use_custom_detector = CBUSECUSTOMREGEX.Checked;
             Properties.Settings.Default.custom_detector = TBCUSTOMREG.Text;

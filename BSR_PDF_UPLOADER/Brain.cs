@@ -129,11 +129,14 @@ namespace BSR_PDF_UPLOADER
             }
         }
 
-        public static void UploadPDF(string[] pdf_paths, string bsr_base, string bsr_user, string bsr_pass, AfterUploadAction after_upload, string copy_path, bool use_log, string log_path, bool replace_mode, string regex, string replace_regex, bool replace_hash)
+        public static void UploadPDF(string[] pdf_paths, string bsr_base, string bsr_user, string bsr_pass, AfterUploadAction after_upload, string copy_path, bool use_log, string log_path, bool replace_mode, string regex, string replace_regex, bool replace_hash, bool remove_existing)
         {
            
+        	List<OracleNumber> already_flushed = new List<OracleNumber>(); //список дел, которые мы уже очищали
+        	
 				using (OracleConnection connection = new OracleConnection())
 	            {
+
                     connection.ConnectionString = "Data Source="+bsr_base+";Password="+bsr_pass+";User ID="+bsr_user;
 	                connection.Open();
 	                
@@ -191,34 +194,71 @@ namespace BSR_PDF_UPLOADER
 	                        fs.Read(ImageData, 0, System.Convert.ToInt32(fs.Length));
 	                        fs.Close();
 	
-	                        using (OracleCommand cmd = new OracleCommand())
-	                        {
-	                            cmd.Connection = connection;
-	                            cmd.CommandText = "SELECT MAX(PORNUM) FROM BSR.IMAGE_DOCUM WHERE ID_DOCUM = :id";
-	
-	                            OracleParameter op = new OracleParameter()
-	                            {
-	                                Direction = System.Data.ParameterDirection.Input,
-	                                OracleType = OracleType.Number,
-	                                Value = case_id,
-	                                ParameterName = ":id"
-	                            };
-	
-	                            cmd.Parameters.Add(op);
-	
-	                            cmd_res = cmd.ExecuteScalar();
-	                        }
-	
 	                        int PORNUM = 1;
-	
-	                        if (cmd_res != null && cmd_res != DBNull.Value)
-	                        {
-	                            PORNUM = (int)((decimal)cmd_res + 1);
-	                        }
-
-
                             
 							OracleTransaction transaction = connection.BeginTransaction();
+							
+							if (remove_existing) {
+								
+								if (already_flushed.IndexOf(case_id) == -1) {
+								
+									using (OracleCommand cmd = new OracleCommand())
+	                            	{
+	
+	                                	cmd.Connection = connection;
+	                                	cmd.Transaction = transaction;
+	                                	cmd.CommandText = "DELETE FROM BSR.IMAGE_DOCUM WHERE ID_DOCUM=:id";
+	                                	OracleParameter op_id = new OracleParameter()
+			                                {
+			                                    Direction = System.Data.ParameterDirection.Input,
+			                                    OracleType = OracleType.Number,
+			                                    Value = case_id,
+			                                    ParameterName = ":id"
+			                                };
+			                            cmd.Parameters.Add(op_id);
+	                                	
+			                            try
+	                               		{
+	                                    	cmd.ExecuteNonQuery();
+	                                    	already_flushed.Add(case_id);
+			                            }   catch (Exception ex)
+	                                	{
+	                                    	if (use_log) Logging.CSV(log_path, Path.GetFileName(pdf_path).Replace(';', ' '), "Загрузка документа (режим замены, удаление)", "Ошибка: " + ex.Message, case_number, bsr_case_number, PORNUM.ToString());
+	                                		continue; //go to next case
+			                            }
+									}
+								
+								}
+								
+							} 
+								
+							using (OracleCommand cmd = new OracleCommand())
+		                    {
+		                        cmd.Connection = connection;
+                                cmd.Transaction = transaction;
+		                        cmd.CommandText = "SELECT MAX(PORNUM) FROM BSR.IMAGE_DOCUM WHERE ID_DOCUM = :id";
+		
+		                        OracleParameter op = new OracleParameter()
+		                        {
+		                            Direction = System.Data.ParameterDirection.Input,
+		                            OracleType = OracleType.Number,
+		                            Value = case_id,
+		                            ParameterName = ":id"
+		                        };
+		
+		                        cmd.Parameters.Add(op);
+		
+		                        cmd_res = cmd.ExecuteScalar();
+		                    }
+									
+								if (cmd_res != null && cmd_res != DBNull.Value)
+		                    {
+		                        PORNUM = (int)((decimal)cmd_res + 1);
+		                    }
+
+						
+							
+							
                             using (OracleCommand cmd = new OracleCommand())
                             {
 
@@ -231,7 +271,7 @@ namespace BSR_PDF_UPLOADER
                                     cmd.CommandText = "UPDATE BSR.IMAGE_DOCUM SET IMAGEDOCUM=:image, USERMOD=:usr, DATEMOD=SYSDATE, EXT=:ext WHERE ID_DOCUM=:id AND PORNUM=:pornum";
                                 }
                                 else
-                                {
+                                { 
                                     cmd.CommandText = "INSERT INTO BSR.IMAGE_DOCUM (ID_DOCUM,IMAGEDOCUM,PORNUM,USERADD,DATEADD,EXT) VALUES (:id,:image,:pornum,:usr,SYSDATE,:ext)";
                                 }
 

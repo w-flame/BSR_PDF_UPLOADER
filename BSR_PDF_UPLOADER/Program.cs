@@ -15,9 +15,9 @@ namespace BSR_PDF_UPLOADER
         {
             if (Properties.Settings.Default.first_launch)
             {
-                Properties.Settings.Default.Upgrade();
+                //Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.first_launch = false;
-                Properties.Settings.Default.Save();
+                //Properties.Settings.Default.Save();
             }
 
 
@@ -86,7 +86,7 @@ namespace BSR_PDF_UPLOADER
                         Brain.UploadPDF(files, Properties.Settings.Default.bsr_base, Properties.Settings.Default.bsr_user,
                         SecurityFunctions.ToInsecureString(SecurityFunctions.DecryptString(Properties.Settings.Default.bsr_pass)),
                         ua, Properties.Settings.Default.after_action_folder, Properties.Settings.Default.use_log, Properties.Settings.Default.log_folder,
-                        Properties.Settings.Default.replace_mode,regex,replace_regex,Properties.Settings.Default.replace_hash);
+                        Properties.Settings.Default.replace_mode,regex,replace_regex,Properties.Settings.Default.replace_hash,Properties.Settings.Default.remove_existing);
                     }
                     catch (Exception ex)
                     {

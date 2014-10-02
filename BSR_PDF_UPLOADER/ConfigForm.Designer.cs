@@ -52,6 +52,7 @@
         	this.CBUSELOG = new System.Windows.Forms.CheckBox();
         	this.FolderBrowserDLG = new System.Windows.Forms.FolderBrowserDialog();
         	this.groupBox5 = new System.Windows.Forms.GroupBox();
+        	this.CBREMOVEEXISTING = new System.Windows.Forms.CheckBox();
         	this.RBREPLACEDOCS = new System.Windows.Forms.RadioButton();
         	this.RBADDDOCS = new System.Windows.Forms.RadioButton();
         	this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -232,7 +233,7 @@
         	// 
         	// SaveButton
         	// 
-        	this.SaveButton.Location = new System.Drawing.Point(461, 276);
+        	this.SaveButton.Location = new System.Drawing.Point(382, 321);
         	this.SaveButton.Name = "SaveButton";
         	this.SaveButton.Size = new System.Drawing.Size(121, 41);
         	this.SaveButton.TabIndex = 11;
@@ -246,7 +247,7 @@
         	this.groupBox4.Controls.Add(this.BrowseLogFolder);
         	this.groupBox4.Controls.Add(this.label4);
         	this.groupBox4.Controls.Add(this.CBUSELOG);
-        	this.groupBox4.Location = new System.Drawing.Point(300, 143);
+        	this.groupBox4.Location = new System.Drawing.Point(300, 188);
         	this.groupBox4.Name = "groupBox4";
         	this.groupBox4.Size = new System.Drawing.Size(282, 87);
         	this.groupBox4.TabIndex = 12;
@@ -292,14 +293,24 @@
         	// 
         	// groupBox5
         	// 
+        	this.groupBox5.Controls.Add(this.CBREMOVEEXISTING);
         	this.groupBox5.Controls.Add(this.RBREPLACEDOCS);
         	this.groupBox5.Controls.Add(this.RBADDDOCS);
-        	this.groupBox5.Location = new System.Drawing.Point(300, 68);
+        	this.groupBox5.Location = new System.Drawing.Point(300, 72);
         	this.groupBox5.Name = "groupBox5";
-        	this.groupBox5.Size = new System.Drawing.Size(282, 69);
+        	this.groupBox5.Size = new System.Drawing.Size(282, 110);
         	this.groupBox5.TabIndex = 13;
         	this.groupBox5.TabStop = false;
         	this.groupBox5.Text = "Дубли";
+        	// 
+        	// CBREMOVEEXISTING
+        	// 
+        	this.CBREMOVEEXISTING.Location = new System.Drawing.Point(6, 66);
+        	this.CBREMOVEEXISTING.Name = "CBREMOVEEXISTING";
+        	this.CBREMOVEEXISTING.Size = new System.Drawing.Size(267, 34);
+        	this.CBREMOVEEXISTING.TabIndex = 2;
+        	this.CBREMOVEEXISTING.Text = "Удалять существующие документы перед загрузкой";
+        	this.CBREMOVEEXISTING.UseVisualStyleBackColor = true;
         	// 
         	// RBREPLACEDOCS
         	// 
@@ -421,6 +432,7 @@
         	this.groupBox6.PerformLayout();
         	this.ResumeLayout(false);
         }
+        private System.Windows.Forms.CheckBox CBREMOVEEXISTING;
         private System.Windows.Forms.CheckBox CBREPLACEHASH;
 
         #endregion
